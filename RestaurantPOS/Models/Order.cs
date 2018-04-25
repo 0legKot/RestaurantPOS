@@ -8,14 +8,13 @@ namespace RestaurantPOS.Models
 
     public partial class Order
     {
-        public Order(TableSeat customerSeat, decimal tips = 0, IEnumerable<OrderItem> orderItems=null)
+        public Order( decimal tips = 0, IEnumerable<OrderItem> orderItems=null)
         {
             Id = new Guid();
             foreach (OrderItem item in orderItems)
             OrderItems.Add(item);
             Tips = tips;
             State = OrderState.Active;
-            CustomerSeat = customerSeat;
             OpenedDate = DateTime.Now;
         }
 
@@ -26,7 +25,6 @@ namespace RestaurantPOS.Models
         public void Void() => State = OrderState.Voided;
         public void Pay() => State = OrderState.Paid;
         decimal TotalPrice => OrderItems.Select(oi => oi.Price).Sum();
-        TableSeat CustomerSeat { get; set; }
         public DateTime OpenedDate { get; }
         public DateTime ClosedDate { get; private set; }
         public void Close() => ClosedDate = DateTime.Now;
