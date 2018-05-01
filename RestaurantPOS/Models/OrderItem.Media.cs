@@ -4,7 +4,7 @@
     {
         public class Media
         {
-            public string MediaInfo { get; set; }
+            public string Mediastr { get; set; }
         }
     }
 }

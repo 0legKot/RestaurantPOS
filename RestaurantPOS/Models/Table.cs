@@ -5,9 +5,11 @@ namespace RestaurantPOS.Models
     public class Table
     {
         const byte seatsInTable = 4;
-        public Table()
+        public Table(int row,int column)
         {
-            Id = new Guid();
+            Id = Guid.NewGuid();// new Guid();
+            Row = row;
+            Column = column;
             TableSeats = new TableSeat[seatsInTable] 
             {
                 new TableSeat(),
@@ -16,10 +18,12 @@ namespace RestaurantPOS.Models
                 new TableSeat()
             };
         }
-
+        public int Row { get; set; }
+        public int Column { get; set; }
         public Guid Id { get; }
         public bool IsActive { get; set; } = true;
         public TableSeat[] TableSeats { get; }
+        //public (int,int) Position { get; set; }
     }
 
 }

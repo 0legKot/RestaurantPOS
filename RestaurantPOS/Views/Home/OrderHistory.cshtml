@@ -1,0 +1,41 @@
+﻿@model OrderHistory
+@{
+    ViewData["Title"] = "OrderHistory";
+}
+<style>
+    .grid-container {
+        display: grid;
+        grid-template-columns: auto auto auto;
+        background-color: #2196F3;
+        padding: 10px;
+    }
+
+    .grid-item {
+        background-color: rgba(255, 255, 255, 0.8);
+        border: 1px solid rgba(0, 0, 0, 0.8);
+        padding: 20px;
+        font-size: 30px;
+        text-align: center;
+    }
+</style>
+<h2>OrderHistory</h2>
+<div class="grid-container">
+    @foreach (OrderInfo info in Model.GetOrders())
+    {
+    <div  class="grid-item" onclick="location.href='TableDetail/View?row=@info.Table.Row&column=@info.Table.Column&seat=@Array.IndexOf(info.Table.TableSeats,info.TableSeats.FirstOrDefault())&id=@info.Order.Id'">
+        @info.Table.Id
+        @Url.Action()
+        <h3>Table row: @info.Table.Row</h3>
+        <h3>Table column: @info.Table.Column</h3>
+
+        @foreach (TableSeat seat in info.TableSeats)
+    {
+        <h3>Seat: @Array.IndexOf(info.Table.TableSeats,seat)</h3>
+        @seat.Id
+}
+        @info.Order.Id
+        @info.Order.State
+    </div>
+    }
+
+</div>

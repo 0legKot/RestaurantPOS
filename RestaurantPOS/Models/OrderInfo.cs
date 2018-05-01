@@ -11,7 +11,7 @@ namespace RestaurantPOS.Models
             Table = table;
             TableSeats = tableSeats;
         }
-        public Guid Id { get; } = new Guid();
+        public Guid Id { get; } = Guid.NewGuid();
         public Order Order { get; set; }
         public Table Table { get; set; }
         public List<TableSeat> TableSeats { get; set; }

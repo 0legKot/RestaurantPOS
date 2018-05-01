@@ -6,7 +6,7 @@ namespace RestaurantPOS.Models
     {
         public TableSeat()
         {
-            Id = new Guid(); 
+            Id = Guid.NewGuid(); 
         }
 
         public Guid Id { get;  }

@@ -7,7 +7,9 @@
         {
             Active=0,
             Voided=1,
-            Paid=2
+            Paid=2,
+            Closed=3,
+            Ready=4
         }
     }
 }
