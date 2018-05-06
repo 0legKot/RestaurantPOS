@@ -13,7 +13,6 @@
 
     table {
         border: none;
-        
     }
 
     tr {
@@ -22,12 +21,13 @@
 
     td {
         border: none;
-        
     }
+
 </style>
 <h2>Restaurant</h2>
+
 <div class="table-responsive">
-    <table background="images/GridBackground.jpg" class="table" cellpadding="0" cellspacing="0" >
+    <table background="images/GridBackground.jpg" class="table" cellpadding="0" cellspacing="0">
         @for (int i = 0; i < Model.Rows; i++)
         {
             <tr>
@@ -43,7 +43,16 @@
                                     <td><img src="images/Seat.png" height="100%" width="100%"></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2"><img src="images/Table.png" height="100%" width="100%"></td>
+                                    <td colspan="2">
+                                        @switch (@Model.TablesGrid[i, j].GeneralState)
+                                        {
+                                    @case Order.OrderState.InActive: <img src="~/images/TableInActive.png" height="100%" width="100%">
+                                    break;
+                                    @case Order.OrderState.Ready:<img src="~/images/TableActionNeeded.png" height="100%" width="100%">
+                                        break;
+                                        @default:<img src="~/images/Table.png" height="100%" width="100%"> break;
+                                        }
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td><img src="images/Seat.png" id="rot180" height="100%" width="100%"></td>

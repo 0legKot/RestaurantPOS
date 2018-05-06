@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace RestaurantPOS.Models
+﻿namespace RestaurantPOS.Models
 {
     public class Restaurant
     {
@@ -15,6 +10,10 @@ namespace RestaurantPOS.Models
             TablesGrid = new Table[Rows, Columns];
             TablesGrid[2,3]=new Table(2,3);
             TablesGrid[5, 6] = new Table(5,6);
+            TablesGrid[5, 7] = new Table(5, 7)
+            {
+                IsActive = false
+            };
         }
         public Restaurant(int _rows, int _columns)
         {

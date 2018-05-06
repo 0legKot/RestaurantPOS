@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "TableDetail";
     var curSeat = Model.TableSeats[ViewBag.curSeat];
-    var isOpened = curSeat.Order==null?false: curSeat.Order.State != Order.OrderState.Voided && curSeat.Order.State != Order.OrderState.Paid;
+    var isOpened = curSeat.Order == null ? false : curSeat.Order.State != Order.OrderState.Voided && curSeat.Order.State != Order.OrderState.Paid;
 }
 <style>
     #rot180 {
@@ -51,7 +51,6 @@
         <input type="hidden" value="@ViewBag.row" name="row" />
         <input type="hidden" value="@ViewBag.column" name="column" />
         <input type="hidden" value="@ViewBag.curSeat" name="seat" />
-        <input type="hidden" value="true" name="x" />
         <input type="submit" class="btn btn-primary" value="Create order" />
     </form>
 }
@@ -118,7 +117,6 @@ else
             </label>
             <input type="number" name="tips" id="tips" />
             <br />
-            <input type="hidden" value="true" name="x" />
             <input type="submit" class="btn btn-primary" value="Increase tips" />
         </form>}
     <p>Total:@curSeat.Order.TotalPrice</p>
@@ -128,14 +126,19 @@ else
             <input type="hidden" value="@ViewBag.row" name="row" />
             <input type="hidden" value="@ViewBag.column" name="column" />
             <input type="hidden" value="@ViewBag.curSeat" name="seat" />
-            <input type="hidden" value="true" name="nothing" />
             <input type="submit" class="btn btn-primary" value="Mark paid" />
         </form>
         <form method="post" action="/Void" class="form-group">
             <input type="hidden" value="@ViewBag.row" name="row" />
             <input type="hidden" value="@ViewBag.column" name="column" />
             <input type="hidden" value="@ViewBag.curSeat" name="seat" />
-            <input type="hidden" value="0" name="nothing" />
             <input type="submit" class="btn btn-primary" value="Void" />
-        </form>}
+        </form>
+        <form method="post" action="/Ready" class="form-group">
+            <input type="hidden" value="@ViewBag.row" name="row" />
+            <input type="hidden" value="@ViewBag.column" name="column" />
+            <input type="hidden" value="@ViewBag.curSeat" name="seat" />
+            <input type="submit" class="btn btn-primary" value="Ready" />
+        </form>
+    }
 }

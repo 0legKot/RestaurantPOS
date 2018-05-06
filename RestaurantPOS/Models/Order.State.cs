@@ -5,11 +5,13 @@
     {
         public enum OrderState
         {
-            Active=0,
+            Active=3,
             Voided=1,
             Paid=2,
-            Closed=3,
-            Ready=4
+            Closed=0,
+            Ready=4,
+            InActive=5,
+            Mixed=6
         }
     }
 }

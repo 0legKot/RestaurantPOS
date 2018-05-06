@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using RestaurantPOS.Models.ViewModels;
 using RestaurantPOS.Models;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace RestaurantPOS.Controllers
 {
@@ -27,6 +23,7 @@ namespace RestaurantPOS.Controllers
             IdentitySeedData.EnsurePopulated(userMgr).Wait();
         }
 
+        [HttpGet]
         [AllowAnonymous]
         public ViewResult Login(string returnUrl)
         {
@@ -59,7 +56,7 @@ namespace RestaurantPOS.Controllers
             ModelState.AddModelError("", "Invalid name or password");
             return View(loginModel);
         }
-
+        
         public async Task<RedirectResult> Logout(string returnUrl = "/")
         {
             await signInManager.SignOutAsync();

@@ -6,7 +6,7 @@
     .grid-container {
         display: grid;
         grid-template-columns: auto auto auto;
-        background-color: #2196F3;
+        background-color:   #2196F3;
         padding: 10px;
     }
 
@@ -17,26 +17,42 @@
         font-size: 30px;
         text-align: center;
     }
+        .grid-item.Active {
+            background-color: orange;
+        }
+
+        .grid-item.Voided {
+            background-color: gray;
+        }
+
+        .grid-item.Paid {
+            background-color: lawngreen;
+        }
+
+        .grid-item.Ready {
+            background-color: red;
+        }
 </style>
 <h2>OrderHistory</h2>
 <div class="grid-container">
     @foreach (OrderInfo info in Model.GetOrders())
     {
-    <div class="grid-item" onclick="location.href='View?row=@info.Table.Row&column=@info.Table.Column&seat=@Array.IndexOf(info.Table.TableSeats, info.TableSeats.FirstOrDefault())&id=@info.Order.Id'">
-        
-        <p> Table id: @info.Table.Id</p>
+    <div 
+         class="grid-item @info.Order.State.ToString()" onclick="location.href='View?OrderInfoId=@info.Id'">
 
-            <p>Table row: @info.Table.Row</p>
-            <p>Table column: @info.Table.Column</p>
+        <p> Table id: @info.TableId</p>
+        <p></p>
+        @*<p>Table row: @info.Table.Row</p>*@
+        @*<p>Table column: @info.Table.Column</p>*@
 
-            @foreach (TableSeat seat in info.TableSeats)
-    {
-        <p>Seat: @Array.IndexOf(info.Table.TableSeats, seat)</p>
-        <p>Seat id: @seat.Id</p>
+        @foreach (int seat in info.TableSeatsNumbers)
+        {
+        <p>Seat: @seat</p>
+        @*<p>Seat id: @seat.Id</p>*@
 }
         <p> Order Id:  @info.Order.Id</p>
-            @info.Order.State
-</div>
+        @info.Order.State
+    </div>
     }
 
 </div>
