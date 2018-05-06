@@ -22,20 +22,21 @@
 <div class="grid-container">
     @foreach (OrderInfo info in Model.GetOrders())
     {
-    <div  class="grid-item" onclick="location.href='TableDetail/View?row=@info.Table.Row&column=@info.Table.Column&seat=@Array.IndexOf(info.Table.TableSeats,info.TableSeats.FirstOrDefault())&id=@info.Order.Id'">
-        @info.Table.Id
-        @Url.Action()
-        <h3>Table row: @info.Table.Row</h3>
-        <h3>Table column: @info.Table.Column</h3>
+    <div class="grid-item" onclick="location.href='View?row=@info.Table.Row&column=@info.Table.Column&seat=@Array.IndexOf(info.Table.TableSeats, info.TableSeats.FirstOrDefault())&id=@info.Order.Id'">
+        
+        <p> Table id: @info.Table.Id</p>
 
-        @foreach (TableSeat seat in info.TableSeats)
+            <p>Table row: @info.Table.Row</p>
+            <p>Table column: @info.Table.Column</p>
+
+            @foreach (TableSeat seat in info.TableSeats)
     {
-        <h3>Seat: @Array.IndexOf(info.Table.TableSeats,seat)</h3>
-        @seat.Id
+        <p>Seat: @Array.IndexOf(info.Table.TableSeats, seat)</p>
+        <p>Seat id: @seat.Id</p>
 }
-        @info.Order.Id
-        @info.Order.State
-    </div>
+        <p> Order Id:  @info.Order.Id</p>
+            @info.Order.State
+</div>
     }
 
 </div>

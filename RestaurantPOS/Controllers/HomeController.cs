@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestaurantPOS.Models;
 
 namespace RestaurantPOS.Controllers
 {
-
+    
     public class HomeController : Controller
     {
         static Restaurant restaurant = new Restaurant();
@@ -71,15 +72,15 @@ namespace RestaurantPOS.Controllers
             ViewBag.curSeat = seat;
             return View(restaurant.TablesGrid[row,column]);
         }
-        [HttpGet("View")]
-        public IActionResult TableDetail(int row, int column, int seat,Guid id)
+        [Authorize]
+        public IActionResult View(int row, int column, int seat,Guid id)
         {
             ViewBag.row = row;
             ViewBag.column = column;
             ViewBag.curSeat = seat;
             Table table = new Table(row, column);
-            table.TableSeats[seat].Order = orderHistory.GetOrders().Where(x => x.Id == id).Select(x=>x.Order).FirstOrDefault();
-            return View(table);
+            table.TableSeats[seat].Order = orderHistory.GetOrders().Where(x => x.Order.Id == id).Select(x=>x.Order).FirstOrDefault();
+            return View("TableDetail",table);
         }
 
         public IActionResult Error()

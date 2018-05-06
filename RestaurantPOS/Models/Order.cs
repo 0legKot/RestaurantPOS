@@ -1,28 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace RestaurantPOS.Models
 {
 
     public partial class Order
     {
-        public Order( decimal tips = 0/*, IEnumerable<OrderItem> orderItems=null*/)
+        public Order( decimal tips = 0)
         {
             Id = Guid.NewGuid();
-            //foreach (OrderItem item in orderItems)
-            //OrderItems.Add(item);
             Tips = tips;
             State = OrderState.Active;
             OpenedDate = DateTime.Now;
         }
-
         public Guid Id { get; }
         public IList<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
         public decimal Tips { get; set; }
-        public decimal Discount { get; set; }
-        public OrderState State { get; private set; }
+        public decimal Discount { get; set; } = 0;
+        public OrderState State { get;  set; }
         public void Void()
         {
             State = OrderState.Voided;
