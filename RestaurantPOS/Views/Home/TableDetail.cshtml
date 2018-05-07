@@ -75,7 +75,7 @@ else
     @if (isOpened)
     {
         <p>Add item:</p>
-        <form method="post" action="/CreateItem" class="form-group">
+        <form method="post" enctype="multipart/form-data" action="/CreateItem" class="form-group">
             <input type="hidden" value="@ViewBag.row" name="row" />
             <input type="hidden" value="@ViewBag.column" name="column" />
             <input type="hidden" value="@ViewBag.curSeat" name="seat" />
@@ -88,6 +88,10 @@ else
             </label>
             <input type="number" name="price" id="price" />
             <br />
+            <label for="price">
+                Item price:
+            </label>
+            <br/>
             <input type="submit" class="btn btn-primary" value="Add" />
         </form>}
     <p>Discount:@curSeat.Order.Discount </p>

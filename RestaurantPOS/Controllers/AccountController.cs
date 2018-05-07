@@ -33,6 +33,13 @@ namespace RestaurantPOS.Controllers
             });
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public ViewResult Register()
+        {
+            return View(new RegisterModel());
+        }
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -49,14 +56,38 @@ namespace RestaurantPOS.Controllers
                     if ((await signInManager.PasswordSignInAsync(user,
                             loginModel.Password, false, false)).Succeeded)
                     {
-                        return Redirect(loginModel?.ReturnUrl ?? "/Home/Index");
+                        return Redirect(loginModel?.ReturnUrl ?? "/");
                     }
                 }
             }
             ModelState.AddModelError("", "Invalid name or password");
             return View(loginModel);
         }
-        
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterModel registerModel)
+        {
+            if (ModelState.IsValid)
+            {
+                IdentityUser user = new IdentityUser() { UserName = registerModel.Name };
+                IdentityResult result =
+                await userManager.CreateAsync(user,registerModel.Password);
+
+                if (result.Succeeded)
+                {
+                    await signInManager.SignOutAsync();
+                    if ((await signInManager.PasswordSignInAsync(user,
+                            registerModel.Password, false, false)).Succeeded)
+                    {
+                        return Redirect("/");
+                    }
+                }
+            }
+            ModelState.AddModelError("", "Invalid name or password");
+            return View(registerModel);
+        }
+
         public async Task<RedirectResult> Logout(string returnUrl = "/")
         {
             await signInManager.SignOutAsync();

@@ -4,19 +4,15 @@ namespace RestaurantPOS.Models
 {
     public class Table:ICloneable
     {
-        const byte seatsInTable = 4;
+        public const byte seatsInTable = 4;
         public Table(int row,int column)
         {
             Id = Guid.NewGuid();// new Guid();
             Row = row;
             Column = column;
-            TableSeats = new TableSeat[seatsInTable] 
-            {
-                new TableSeat(),
-                new TableSeat(),
-                new TableSeat(),
-                new TableSeat()
-            };
+            TableSeats = new TableSeat[seatsInTable]; 
+            for (int i = 0; i < seatsInTable; i++)
+                TableSeats[i] = new TableSeat();
             IsActive = true;
         }
         public Order.OrderState GeneralState {
