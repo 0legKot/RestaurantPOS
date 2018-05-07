@@ -15,15 +15,15 @@
     }
 
     div.tabl {
-        max-width: 200px;
+        max-width: 150px;
         min-width: 100px;
     }
 </style>
 <h2>TableDetail</h2>
-<h3>@Model.Id</h3>
+@*<h3>@Model.Id</h3>*@
 <h3>Table row: @Model.Row</h3>
 <h3>Table column: @Model.Column</h3>
-<h3>Seat: @ViewBag.curSeat</h3>
+<h3>Seat: @("ABCD"[ViewBag.curSeat])</h3>
 <div class="tabl">
     @await Html.PartialAsync("_TableItem", @Model)
 </div>

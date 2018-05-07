@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -86,10 +87,10 @@ namespace RestaurantPOS.Controllers
             return Redirect($"~/Home/TableDetail?row={row}&column={column}&seat={seat}");
         }
         [HttpPost("CreateItem")]
-        public IActionResult CreateItem(int row, int column, int seat, string name, int price)
+        public IActionResult CreateItem(int row, int column, int seat, string name, string price)
         {
 
-            restaurant.TablesGrid[row, column].TableSeats[seat].Order.OrderItems.Add(new OrderItem { Name = name, Price = price, CustomerMedia = new byte[0] });
+            restaurant.TablesGrid[row, column].TableSeats[seat].Order.OrderItems.Add(new OrderItem { Name = name, Price =decimal.Parse(price, new CultureInfo("en-US")), CustomerMedia = new byte[0] });
             restaurant.TablesGrid[row, column].TableSeats[seat].Order.State = Order.OrderState.Active;
             return Redirect($"~/Home/TableDetail?row={row}&column={column}&seat={seat}");
         }
@@ -101,15 +102,15 @@ namespace RestaurantPOS.Controllers
             return Redirect($"~/Home/TableDetail?row={row}&column={column}&seat={seat}");
         }
         [HttpPost("IncDiscount")] 
-        public IActionResult IncDiscount(int row, int column, int seat, string name, decimal discount)
+        public IActionResult IncDiscount(int row, int column, int seat, string name, string discount)
         {
-            restaurant.TablesGrid[row, column].TableSeats[seat].Order.Discount += discount;
+            restaurant.TablesGrid[row, column].TableSeats[seat].Order.Discount += decimal.Parse(discount, new CultureInfo("en-US"));
             return Redirect($"~/Home/TableDetail?row={row}&column={column}&seat={seat}");
         }
         [HttpPost("IncTips")]
-        public IActionResult IncTips(int row, int column, int seat, string name, decimal tips)
+        public IActionResult IncTips(int row, int column, int seat, string name, string tips)
         {
-            restaurant.TablesGrid[row, column].TableSeats[seat].Order.Tips += tips;
+            restaurant.TablesGrid[row, column].TableSeats[seat].Order.Tips += decimal.Parse(tips, new CultureInfo("en-US"));
             return Redirect($"~/Home/TableDetail?row={row}&column={column}&seat={seat}");
         }
         [HttpGet]
