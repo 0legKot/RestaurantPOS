@@ -15,7 +15,7 @@
 
                     @if (Model.TablesGrid[i, j] != null)
                     {
-                <td width="100/@Model.Columns%" height="100%" onclick="location.href='Home/TableDetail?row=@i&column=@j&seat=0'">
+                <td width="100/@Model.Columns%" height="100%" onclick="location.href='TableDetail?row=@i&column=@j&seat=0'">
                     @await Html.PartialAsync("_TableItem", @Model.TablesGrid[i, j])
                 </td>
                     }

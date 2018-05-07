@@ -20,7 +20,11 @@ namespace RestaurantPOS.Controllers
         public static readonly OrderHistory orderHistory = new OrderHistory();
         public IActionResult Index()
         {
-            return View("Restaurant", restaurant);
+            return Redirect("~/Home/Restaurant");
+        }
+        public IActionResult Restaurant()
+        {
+            return View(restaurant);
         }
         public IActionResult ManageTables()
         {
