@@ -13,15 +13,17 @@ using RestaurantPOS.Models;
 
 namespace RestaurantPOS.Controllers
 {
-
+    [Authorize]
     public class HomeController : Controller
     {
         public static readonly Restaurant restaurant = new Restaurant();
         public static readonly OrderHistory orderHistory = new OrderHistory();
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return Redirect("~/Home/Restaurant");
         }
+        [AllowAnonymous]
         public IActionResult Restaurant()
         {
             return View(restaurant);
@@ -30,9 +32,9 @@ namespace RestaurantPOS.Controllers
         {
             return View(restaurant);
         }
+        [AllowAnonymous]
         public IActionResult OrderHistory()
         {
-
             return View(orderHistory);
         }
         //[HttpPost] needed
@@ -42,30 +44,41 @@ namespace RestaurantPOS.Controllers
             else restaurant.TablesGrid[row, column].IsActive = !restaurant.TablesGrid[row, column].IsActive;
             return Redirect("~/Home/ManageTables");
         }
-        [Authorize]
         [HttpPost("CreateOrder")]
         public IActionResult CreateOrder(int row, int column, int seat,string waiter)
         {
             Order order = new Order(waiter);
             Table table = restaurant.TablesGrid[row, column];
             table.TableSeats[seat].Order = order;
-            orderHistory.AddOrder(order, table.Id, new List<int>() { seat });
+            List<int> seatNumbers = new List<int>();
+            foreach (TableSeat ts in table.TableSeats)
+                if (ts.Order != null && ts.Order.Id == order.Id) seatNumbers.Add(Array.IndexOf(table.TableSeats,ts));
+            orderHistory.AddOrder(order, table.Id, seatNumbers);
             return Redirect($"~/Home/TableDetail?row={row}&column={column}&seat={seat}");
         }
         [HttpPost("Pay")]
         public IActionResult Pay(int row, int column, int seat)
         {
             restaurant.TablesGrid[row, column].TableSeats[seat].Order.Pay();
-            restaurant.TablesGrid[row, column].TableSeats[seat].Order = null;
-            return Redirect($"~/Home/TableDetail?row={row}&column={column}&seat={seat}");
+            return CloseOrder(row, column, seat);
         }
         [HttpPost("Void")]
         public IActionResult Void(int row, int column, int seat)
         {
+
             restaurant.TablesGrid[row, column].TableSeats[seat].Order.Void();
-            restaurant.TablesGrid[row, column].TableSeats[seat].Order = null;
+            return CloseOrder(row, column, seat);
+        }
+
+        private IActionResult CloseOrder(int row, int column, int seat)
+        {
+            var closingOrderId = restaurant.TablesGrid[row, column].TableSeats[seat].Order.Id;
+            foreach (TableSeat ts in restaurant.TablesGrid[row, column].TableSeats)
+                if (ts.Order!=null&&closingOrderId == ts.Order.Id)
+                    ts.Order = null;
             return Redirect($"~/Home/TableDetail?row={row}&column={column}&seat={seat}");
         }
+
         [HttpPost("Ready")]
         public IActionResult Ready(int row, int column, int seat)
         {
@@ -80,7 +93,14 @@ namespace RestaurantPOS.Controllers
             restaurant.TablesGrid[row, column].TableSeats[seat].Order.State = Order.OrderState.Active;
             return Redirect($"~/Home/TableDetail?row={row}&column={column}&seat={seat}");
         }
-        [HttpPost("IncDiscount")]
+        [HttpPost("AddSeats")]
+        public IActionResult AddSeats(int row, int column, int seat, string name, int additionalSeat)
+        {
+            restaurant.TablesGrid[row, column].TableSeats[additionalSeat].Order = restaurant.TablesGrid[row, column].TableSeats[seat].Order;
+            orderHistory.AddSeatToOrder(restaurant.TablesGrid[row, column].TableSeats[seat].Order.Id, additionalSeat);
+            return Redirect($"~/Home/TableDetail?row={row}&column={column}&seat={seat}");
+        }
+        [HttpPost("IncDiscount")] 
         public IActionResult IncDiscount(int row, int column, int seat, string name, decimal discount)
         {
             restaurant.TablesGrid[row, column].TableSeats[seat].Order.Discount += discount;
@@ -99,13 +119,15 @@ namespace RestaurantPOS.Controllers
             ViewBag.row = row;
             ViewBag.column = column;
             ViewBag.curSeat = seat;
+
             return View(restaurant.TablesGrid[row, column]);
         }
 
-       
+        [AllowAnonymous]
         public IActionResult View(Guid OrderInfoId)
         {
             OrderInfo orderInfo = orderHistory.GetOrderInfo(OrderInfoId);
+            if (orderInfo == null) return Redirect("~/Home/OrderHistory");
             Table curTable = null;
             foreach (Table t in restaurant.TablesGrid)
                 if (t != null && t.Id == orderInfo.TableId) curTable = t.Clone() as Table;
@@ -116,8 +138,12 @@ namespace RestaurantPOS.Controllers
             ViewBag.column = curTable.Column;
             ViewBag.curSeat = orderInfo.TableSeatsNumbers.FirstOrDefault();
 
-            foreach (int seat in orderInfo.TableSeatsNumbers)
-                curTable.TableSeats[seat].Order = orderInfo.Order;
+
+            foreach (TableSeat seat in curTable.TableSeats)
+                seat.Order = orderInfo.Order;
+
+            //foreach (int seat in orderInfo.TableSeatsNumbers)
+            //    curTable.TableSeats[seat].Order = orderInfo.Order;
             return View("TableDetail", curTable);
         }
 

@@ -12,10 +12,16 @@ namespace RestaurantPOS.Models
         {
             Orders.Add(new OrderInfo(order, tableId, tableSeatsNumbers));
         }
+        public void AddSeatToOrder(Guid orderId, int tableSeatsNumber)
+        {
+            var order=Orders.FirstOrDefault(x=>x.Order.Id==orderId);
+            if (order == null || order.Order.ClosedDate != new DateTime()) return;
+            order.TableSeatsNumbers.Add(tableSeatsNumber);
+        }
         public OrderInfo GetOrderInfo(Guid OrderInfoId)
         {
-            var tmpOrderInfo = Orders.Where(o => o.Id == OrderInfoId).FirstOrDefault();
-            return (OrderInfo)tmpOrderInfo.Clone();
+            var tmpOrderInfo = Orders.FirstOrDefault(o => o.Id == OrderInfoId);
+            return tmpOrderInfo?.Clone() as OrderInfo;
 
         }
         public IList<OrderInfo> GetOrders()

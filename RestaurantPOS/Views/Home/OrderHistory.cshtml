@@ -40,7 +40,7 @@
     <div class="grid-item @info.Order.State.ToString()" onclick="location.href='View?OrderInfoId=@info.Id'">
         <p> Table id: @info.TableId</p>
         @foreach (int seat in info.TableSeatsNumbers)
-    {<p>Seat : @seat</p>}
+        {<p>Seat : @seat</p>}
         <p>Order Id:  @info.Order.Id</p>
         <p>Order state:@info.Order.State</p>
         <p>Ordered: @info.Order.OpenedDate</p>

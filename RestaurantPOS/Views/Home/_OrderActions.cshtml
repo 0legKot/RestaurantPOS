@@ -1,0 +1,19 @@
+﻿<form method="post" action="/Pay" class="form-group">
+    <input type="hidden" value="@ViewBag.row" name="row" />
+    <input type="hidden" value="@ViewBag.column" name="column" />
+    <input type="hidden" value="@ViewBag.curSeat" name="seat" />
+    <input type="submit" class="btn btn-primary" value="Mark paid" />
+</form>
+<form method="post" action="/Void" class="form-group">
+    <input type="hidden" value="@ViewBag.row" name="row" />
+    <input type="hidden" value="@ViewBag.column" name="column" />
+    <input type="hidden" value="@ViewBag.curSeat" name="seat" />
+    <input type="submit" class="btn btn-primary" value="Void" />
+</form>
+
+<form method="post" action="/Ready" class="form-group">
+    <input type="hidden" value="@ViewBag.row" name="row" />
+    <input type="hidden" value="@ViewBag.column" name="column" />
+    <input type="hidden" value="@ViewBag.curSeat" name="seat" />
+    <input type="submit" class="btn btn-primary" value="Ready" />
+</form>

@@ -4,8 +4,7 @@
     var curSeat = Model.TableSeats[ViewBag.curSeat];
     var isOpened = curSeat.Order == null ? false : curSeat.Order.State != Order.OrderState.Voided && curSeat.Order.State != Order.OrderState.Paid;
 }
-@using Microsoft.AspNetCore.Identity
-@inject UserManager<IdentityUser> UserManager
+
 <style>
     #rot180 {
         -webkit-transform: rotate(180deg);
@@ -15,16 +14,9 @@
         transform: rotate(180deg);
     }
 
-    table {
-        border: none;
-    }
-
-    tr {
-        border: none;
-    }
-
-    td {
-        border: none;
+    div.tabl {
+        max-width: 200px;
+        min-width: 100px;
     }
 </style>
 <h2>TableDetail</h2>
@@ -32,30 +24,14 @@
 <h3>Table row: @Model.Row</h3>
 <h3>Table column: @Model.Column</h3>
 <h3>Seat: @ViewBag.curSeat</h3>
-<table cellpadding="0" cellspacing="0">
-    <tr>
-        <td onclick="location.href='?row=@ViewBag.row&column=@ViewBag.column&seat=0'"><img src="~/images/Seat.png" height="100%" width="100%"></td>
-        <td onclick="location.href='?row=@ViewBag.row&column=@ViewBag.column&seat=1'"><img src="~/images/Seat.png" height="100%" width="100%"></td>
-    </tr>
-    <tr>
-        <td colspan="2"><img src="~/images/Table.png" height="100%" width="100%"></td>
-    </tr>
-    <tr>
-        <td onclick="location.href='?row=@ViewBag.row&column=@ViewBag.column&seat=2'"><img src="~/images/Seat.png" id="rot180" height="100%" width="100%"></td>
-        <td onclick="location.href='?row=@ViewBag.row&column=@ViewBag.column&seat=3'"><img src="~/images/Seat.png" id="rot180" height="100%" width="100%"></td>
-    </tr>
-</table>
-
+<div class="tabl">
+    @await Html.PartialAsync("_TableItem", @Model)
+</div>
 <p>Id of seat: @curSeat.Id</p>
 @if (curSeat.Order == null)
 {
-    <form method="post" action="/CreateOrder">
-        <input type="hidden" value="@ViewBag.row" name="row" />
-        <input type="hidden" value="@ViewBag.column" name="column" />
-        <input type="hidden" value="@ViewBag.curSeat" name="seat" />
-        <input type="hidden" value="@UserManager.GetUserName(User)" name="waiter" />
-        <input type="submit" class="btn btn-primary" value="Create order" />
-    </form>
+    @await Html.PartialAsync("_OrderCreation")
+
 }
 else
 {
@@ -78,74 +54,39 @@ else
     @if (isOpened)
     {
         <p>Add item:</p>
-        <form method="post" enctype="multipart/form-data" action="/CreateItem" class="form-group">
+        @await Html.PartialAsync("_ItemAdding")
+        <p>Select additional seats:</p>
+
+            @foreach (TableSeat ts in Model.TableSeats)
+    {
+        if (ts != curSeat&&ts.Order==null)
+        {
+
+        <form method="post" action="/AddSeats" class="form-group">
             <input type="hidden" value="@ViewBag.row" name="row" />
             <input type="hidden" value="@ViewBag.column" name="column" />
             <input type="hidden" value="@ViewBag.curSeat" name="seat" />
-            <label for="name">
-                Item name:
-            </label>
-            <input name="name" id="name" />
-            <label for="price">
-                Item price:
-            </label>
-            <input type="number" name="price" id="price" />
-            <br />
-            <label for="price">
-                Item price:
-            </label>
-            <br />
-            <input type="submit" class="btn btn-primary" value="Add" />
-        </form>}
+            <input type="hidden" value="@Array.IndexOf(Model.TableSeats, ts)" name="additionalSeat" />
+            <input type="submit" value="Add seat number @Array.IndexOf(Model.TableSeats, ts)" />
+
+        </form>
+}
+
+        }
+    }
     <p>Discount:@curSeat.Order.Discount </p>
     @if (isOpened)
     {
-        <form method="post" action="/IncDiscount" class="form-group">
-            <input type="hidden" value="@ViewBag.row" name="row" />
-            <input type="hidden" value="@ViewBag.column" name="column" />
-            <input type="hidden" value="@ViewBag.curSeat" name="seat" />
-            <label for="discount">
-                Increase discount on:
-            </label>
-            <input type="number" name="discount" id="discount" />
-            <br />
-            <input type="submit" class="btn btn-primary" value="Increase discount" />
-        </form>}
+        @await Html.PartialAsync("_IncreaseDiscount")
+    }
     <p>Tips:@curSeat.Order.Tips</p>
     @if (isOpened)
     {
-
-        <form method="post" action="/IncTips" class="form-group">
-            <input type="hidden" value="@ViewBag.row" name="row" />
-            <input type="hidden" value="@ViewBag.column" name="column" />
-            <input type="hidden" value="@ViewBag.curSeat" name="seat" />
-            <label for="tips">
-                Increase tips on:
-            </label>
-            <input type="number" name="tips" id="tips" />
-            <br />
-            <input type="submit" class="btn btn-primary" value="Increase tips" />
-        </form>}
+        @await Html.PartialAsync("_IncreaseTips")
+    }
     <p>Total:@curSeat.Order.TotalPrice</p>
     @if (isOpened)
     {
-        <form method="post" action="/Pay" class="form-group">
-            <input type="hidden" value="@ViewBag.row" name="row" />
-            <input type="hidden" value="@ViewBag.column" name="column" />
-            <input type="hidden" value="@ViewBag.curSeat" name="seat" />
-            <input type="submit" class="btn btn-primary" value="Mark paid" />
-        </form>
-        <form method="post" action="/Void" class="form-group">
-            <input type="hidden" value="@ViewBag.row" name="row" />
-            <input type="hidden" value="@ViewBag.column" name="column" />
-            <input type="hidden" value="@ViewBag.curSeat" name="seat" />
-            <input type="submit" class="btn btn-primary" value="Void" />
-        </form>
-        <form method="post" action="/Ready" class="form-group">
-            <input type="hidden" value="@ViewBag.row" name="row" />
-            <input type="hidden" value="@ViewBag.column" name="column" />
-            <input type="hidden" value="@ViewBag.curSeat" name="seat" />
-            <input type="submit" class="btn btn-primary" value="Ready" />
-        </form>
+        @await Html.PartialAsync("_OrderActions")
     }
 }

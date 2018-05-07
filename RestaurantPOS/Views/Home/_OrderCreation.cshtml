@@ -1,0 +1,10 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+<form method="post" action="/CreateOrder">
+    <input type="hidden" value="@ViewBag.row" name="row" />
+    <input type="hidden" value="@ViewBag.column" name="column" />
+    <input type="hidden" value="@ViewBag.curSeat" name="seat" />
+    <input type="hidden" value="@UserManager.GetUserName(User)" name="waiter" />
+    <input type="submit" class="btn btn-primary" value="Create order" />
+</form>
+
