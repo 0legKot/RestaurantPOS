@@ -8,15 +8,15 @@ namespace RestaurantPOS.Models
     public partial class Order:ICloneable
     {
         private Order() { }
-        public Order( decimal tips = 0)
+        public Order(string waiter )
         {
             Id = Guid.NewGuid();
-            Tips = tips;
+            Waiter = waiter;
             State = OrderState.Active;
             OpenedDate = DateTime.Now;
         }
 
-
+        public string Waiter { get; set; }
 
         public Guid Id { get; private set; }
         public IList<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
@@ -55,7 +55,8 @@ namespace RestaurantPOS.Models
             Discount = Discount,
             State = State,
             OpenedDate = OpenedDate,
-            ClosedDate = ClosedDate
+            ClosedDate = ClosedDate,
+            Waiter=Waiter
         };
         }
     }

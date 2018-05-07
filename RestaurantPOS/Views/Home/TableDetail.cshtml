@@ -4,6 +4,8 @@
     var curSeat = Model.TableSeats[ViewBag.curSeat];
     var isOpened = curSeat.Order == null ? false : curSeat.Order.State != Order.OrderState.Voided && curSeat.Order.State != Order.OrderState.Paid;
 }
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
 <style>
     #rot180 {
         -webkit-transform: rotate(180deg);
@@ -51,6 +53,7 @@
         <input type="hidden" value="@ViewBag.row" name="row" />
         <input type="hidden" value="@ViewBag.column" name="column" />
         <input type="hidden" value="@ViewBag.curSeat" name="seat" />
+        <input type="hidden" value="@UserManager.GetUserName(User)" name="waiter" />
         <input type="submit" class="btn btn-primary" value="Create order" />
     </form>
 }
@@ -91,7 +94,7 @@ else
             <label for="price">
                 Item price:
             </label>
-            <br/>
+            <br />
             <input type="submit" class="btn btn-primary" value="Add" />
         </form>}
     <p>Discount:@curSeat.Order.Discount </p>

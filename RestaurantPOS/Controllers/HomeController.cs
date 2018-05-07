@@ -38,10 +38,11 @@ namespace RestaurantPOS.Controllers
             else restaurant.TablesGrid[row, column].IsActive = !restaurant.TablesGrid[row, column].IsActive;
             return Redirect("~/Home/ManageTables");
         }
+        [Authorize]
         [HttpPost("CreateOrder")]
-        public IActionResult CreateOrder(int row, int column, int seat)
+        public IActionResult CreateOrder(int row, int column, int seat,string waiter)
         {
-            Order order = new Order();
+            Order order = new Order(waiter);
             Table table = restaurant.TablesGrid[row, column];
             table.TableSeats[seat].Order = order;
             orderHistory.AddOrder(order, table.Id, new List<int>() { seat });
@@ -90,13 +91,14 @@ namespace RestaurantPOS.Controllers
         [HttpGet]
         public IActionResult TableDetail(int row, int column, int seat)
         {
+            if (!restaurant.TablesGrid[row, column].IsActive) return View("Restaurant",restaurant);
             ViewBag.row = row;
             ViewBag.column = column;
             ViewBag.curSeat = seat;
             return View(restaurant.TablesGrid[row, column]);
         }
 
-        [Authorize]
+       
         public IActionResult View(Guid OrderInfoId)
         {
             OrderInfo orderInfo = orderHistory.GetOrderInfo(OrderInfoId);
