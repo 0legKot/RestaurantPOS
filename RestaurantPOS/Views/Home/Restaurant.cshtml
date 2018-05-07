@@ -2,31 +2,35 @@
 @{
     ViewData["Title"] = "Restaurant";
 }
-
+<style>
+    .mybg {
+        background-image: url('/images/GridBackground.jpg');
+    }
+</style>
 <h2>Restaurant</h2>
 
 <div class="table-responsive">
-    <table background="images/GridBackground.jpg" class="table" cellpadding="0" cellspacing="0">
-        @for (int i = 0; i < Model.Rows; i++)
-        {
-            <tr>
-                @for (int j = 0; j < Model.Columns; j++)
+    <table  @*="images/GridBackground.jpg"*@ class="table mybg" cellpadding="0" cellspacing="0">
+    @for (int i = 0; i < Model.Rows; i++)
+    {
+        <tr>
+            @for (int j = 0; j < Model.Columns; j++)
+            {
+
+                @if (Model.TablesGrid[i, j] != null)
                 {
-
-                    @if (Model.TablesGrid[i, j] != null)
-                    {
-                <td width="100/@Model.Columns%" height="100%" onclick="location.href='TableDetail?row=@i&column=@j&seat=0'">
-                    @await Html.PartialAsync("_TableItem", @Model.TablesGrid[i, j])
-                </td>
-                    }
-                    else
-                    {
-                        <td></td>
-                    }
-
-
+                    <td width="100/@Model.Columns%" height="100%" onclick="location.href='TableDetail?row=@i&column=@j&seat=0'">
+                        @await Html.PartialAsync("_TableItem", @Model.TablesGrid[i, j])
+                    </td>
                 }
-            </tr>
-        }
+                else
+                {
+                    <td></td>
+                }
+
+
+            }
+        </tr>
+    }
     </table>
 </div>
