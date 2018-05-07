@@ -16,17 +16,27 @@ namespace RestaurantPOS.Controllers
 
     public class HomeController : Controller
     {
-        static Restaurant restaurant = new Restaurant();
-        static OrderHistory orderHistory = new OrderHistory();
+        public static readonly Restaurant restaurant = new Restaurant();
+        public static readonly OrderHistory orderHistory = new OrderHistory();
         public IActionResult Index()
         {
             return View("Restaurant", restaurant);
         }
-
+        public IActionResult ManageTables()
+        {
+            return View(restaurant);
+        }
         public IActionResult OrderHistory()
         {
 
             return View(orderHistory);
+        }
+        //[HttpPost] needed
+        public IActionResult AddTable(int row, int column)
+        {
+            if (restaurant.TablesGrid[row, column] == null) restaurant.TablesGrid[row, column] = new Table(row, column);
+            else restaurant.TablesGrid[row, column].IsActive = !restaurant.TablesGrid[row, column].IsActive;
+            return Redirect("~/Home/ManageTables");
         }
         [HttpPost("CreateOrder")]
         public IActionResult CreateOrder(int row, int column, int seat)
@@ -61,7 +71,7 @@ namespace RestaurantPOS.Controllers
         public IActionResult CreateItem(int row, int column, int seat, string name, int price)
         {
 
-            restaurant.TablesGrid[row, column].TableSeats[seat].Order.OrderItems.Add(new OrderItem { Name = name, Price = price, CustomerMedia = null });
+            restaurant.TablesGrid[row, column].TableSeats[seat].Order.OrderItems.Add(new OrderItem { Name = name, Price = price, CustomerMedia = new byte[0] });
             restaurant.TablesGrid[row, column].TableSeats[seat].Order.State = Order.OrderState.Active;
             return Redirect($"~/Home/TableDetail?row={row}&column={column}&seat={seat}");
         }

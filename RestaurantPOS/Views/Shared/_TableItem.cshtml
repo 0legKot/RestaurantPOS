@@ -1,0 +1,34 @@
+﻿@model Table
+<style>
+    #rot180 {
+        -webkit-transform: rotate(180deg);
+        -moz-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+        -o-transform: rotate(180deg);
+        transform: rotate(180deg);
+    }
+</style>
+<table width="100%" height="100%" cellpadding="0" cellspacing="0">
+    <tr>
+        <td><img src="~/images/Seat.png" height="100%" width="100%"></td>
+        <td><img src="~/images/Seat.png" height="100%" width="100%"></td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            @switch (Model.GeneralState)
+            {
+                @case Order.OrderState.InActive: <img src="~/images/TableInActive.png" height="100%" width="100%">
+                break;
+                @case Order.OrderState.Ready:<img src="~/images/TableActionNeeded.png" height="100%" width="100%">
+                break;
+                @default:<img src="~/images/Table.png" height="100%" width="100%"> 
+                break;
+             }
+        </td>
+    </tr>
+    <tr>
+        <td><img src="~/images/Seat.png" id="rot180" height="100%" width="100%"></td>
+        <td><img src="~/images/Seat.png" id="rot180" height="100%" width="100%"></td>
+    </tr>
+</table>
+

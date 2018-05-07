@@ -2,28 +2,7 @@
 @{
     ViewData["Title"] = "Restaurant";
 }
-<style>
-    #rot180 {
-        -webkit-transform: rotate(180deg);
-        -moz-transform: rotate(180deg);
-        -ms-transform: rotate(180deg);
-        -o-transform: rotate(180deg);
-        transform: rotate(180deg);
-    }
 
-    table {
-        border: none;
-    }
-
-    tr {
-        border: none;
-    }
-
-    td {
-        border: none;
-    }
-
-</style>
 <h2>Restaurant</h2>
 
 <div class="table-responsive">
@@ -36,30 +15,9 @@
 
                     @if (Model.TablesGrid[i, j] != null)
                     {
-                        <td width="100/@Model.Columns%" height="100%" onclick="location.href='Home/TableDetail?row=@i&column=@j&seat=0'">
-                            <table width="100%" height="100%" cellpadding="0" cellspacing="0">
-                                <tr>
-                                    <td><img src="images/Seat.png" height="100%" width="100%"></td>
-                                    <td><img src="images/Seat.png" height="100%" width="100%"></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        @switch (@Model.TablesGrid[i, j].GeneralState)
-                                        {
-                                    @case Order.OrderState.InActive: <img src="~/images/TableInActive.png" height="100%" width="100%">
-                                    break;
-                                    @case Order.OrderState.Ready:<img src="~/images/TableActionNeeded.png" height="100%" width="100%">
-                                        break;
-                                        @default:<img src="~/images/Table.png" height="100%" width="100%"> break;
-                                        }
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><img src="images/Seat.png" id="rot180" height="100%" width="100%"></td>
-                                    <td><img src="images/Seat.png" id="rot180" height="100%" width="100%"></td>
-                                </tr>
-                            </table>
-                        </td>
+                <td width="100/@Model.Columns%" height="100%" onclick="location.href='Home/TableDetail?row=@i&column=@j&seat=0'">
+                    @await Html.PartialAsync("_TableItem", @Model.TablesGrid[i, j])
+                </td>
                     }
                     else
                     {
