@@ -13,7 +13,9 @@
         -o-transform: rotate(180deg);
         transform: rotate(180deg);
     }
-
+    table.table-bordered {
+        max-width :600px;
+    }
     div.tabl {
         max-width: 150px;
         min-width: 100px;
@@ -21,13 +23,14 @@
 </style>
 <h2>TableDetail</h2>
 @*<h3>@Model.Id</h3>*@
-<h3>Table row: @Model.Row</h3>
-<h3>Table column: @Model.Column</h3>
-<h3>Seat: @("ABCD"[ViewBag.curSeat])</h3>
+<table class="table table-bordered table-striped">
+    <tr><td>Row: @Model.Row</td>
+    <td>Column: @Model.Column</td>
+    <td>Seat: @("ABCD"[ViewBag.curSeat])</td></tr>
+</table>
 <div class="tabl">
     @await Html.PartialAsync("_TableItem", @Model)
 </div>
-<p>Id of seat: @curSeat.Id</p>
 @if (curSeat.Order == null)
 {
     @await Html.PartialAsync("_OrderCreation")
@@ -36,7 +39,7 @@
 else
 {
     <h3>Order status: @curSeat.Order.State</h3>
-    <table class="table table-bordered">
+    <table  class="table table-bordered">
         <thead>
             <tr>
                 <td>Item name</td>
@@ -55,38 +58,35 @@ else
     {
         <p>Add item:</p>
         @await Html.PartialAsync("_ItemAdding")
-        <p>Select additional seats:</p>
+        @if (Model.TableSeats.Any(x => x.Order == null))
+        {<p>Select additional seats:</p>}
 
-            @foreach (TableSeat ts in Model.TableSeats)
-    {
-        if (ts != curSeat&&ts.Order==null)
+        @foreach (TableSeat ts in Model.TableSeats)
         {
+            if (ts != curSeat && ts.Order == null)
+            {
+                <form method="post" action="/AddSeats" class="form-group">
+                    <input type="hidden" value="@ViewBag.row" name="row" />
+                    <input type="hidden" value="@ViewBag.column" name="column" />
+                    <input type="hidden" value="@ViewBag.curSeat" name="seat" />
+                    <input type="hidden" value="@Array.IndexOf(Model.TableSeats, ts)" name="additionalSeat" />
+                    <input type="submit" value="Add seat  @("ABCD"[Array.IndexOf(Model.TableSeats, ts)])" />
 
-        <form method="post" action="/AddSeats" class="form-group">
-            <input type="hidden" value="@ViewBag.row" name="row" />
-            <input type="hidden" value="@ViewBag.column" name="column" />
-            <input type="hidden" value="@ViewBag.curSeat" name="seat" />
-            <input type="hidden" value="@Array.IndexOf(Model.TableSeats, ts)" name="additionalSeat" />
-            <input type="submit" value="Add seat number @Array.IndexOf(Model.TableSeats, ts)" />
-
-        </form>
-}
-
+                </form>
+            }
         }
     }
-    <p>Discount:@curSeat.Order.Discount </p>
+    <fieldset>
+        <legend>Subtotals</legend>
+        <p>Discount:@curSeat.Order.Discount </p>
+        <p>Tips:@curSeat.Order.Tips</p>
+        <p>Total:@curSeat.Order.TotalPrice</p>
+    </fieldset>
+    <hr>
     @if (isOpened)
     {
         @await Html.PartialAsync("_IncreaseDiscount")
-    }
-    <p>Tips:@curSeat.Order.Tips</p>
-    @if (isOpened)
-    {
         @await Html.PartialAsync("_IncreaseTips")
-    }
-    <p>Total:@curSeat.Order.TotalPrice</p>
-    @if (isOpened)
-    {
         @await Html.PartialAsync("_OrderActions")
     }
 }

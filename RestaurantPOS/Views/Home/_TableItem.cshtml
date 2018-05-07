@@ -1,11 +1,21 @@
 ﻿@model Table
-@{ 
-    Order.OrderState[] orderStates= new Order.OrderState[4];
+@{
+    Order.OrderState[] orderStates = new Order.OrderState[4];
     for (int i = 0; i < 4; i++)
     {
-        orderStates[i] = Model.TableSeats[i].Order?.State??Order.OrderState.Closed;
+        orderStates[i] = Model.TableSeats[i].Order?.State ?? Order.OrderState.Closed;
     }
     char getPlace(int place) => "ABCD"[place];
+    string seatLink(int seat) => $"location.href='?row={ViewBag.row}&column={ViewBag.column}&seat={seat}'";
+    string tableImg() {
+        switch (Model.GeneralState)
+        {
+            case Order.OrderState.InActive: return "TableInActive.png";
+            case Order.OrderState.Ready: return "TableActionNeeded.png";
+            case Order.OrderState.Mixed: return "TableActionNeeded.png";
+            default: return "Table.png";
+        }
+    }
 }
 <style>
     #rot180 {
@@ -13,64 +23,62 @@
         -moz-transform: rotate(180deg);
         -ms-transform: rotate(180deg);
         -o-transform: rotate(180deg);
-        transform: rotate(180deg);
-    }
+            transform: rotate(180deg);
+        }
+
     .Active {
-        background-color:orange
+        background-color: orange
     }
+
     .Ready {
         background-color: red
     }
+    .Voided {
+        background-color: black
+    }
+    .Paid {
+        background-color: lawngreen
+    }
+
     .Closed {
         background-color: gray
     }
+
     .xxx {
         border-radius: 100%;
-        width: 20px ;
-        height :20px;
-        text-align:center;
+        width: 20px;
+        height: 20px;
+        text-align: center;
     }
+
     td {
-        min-height:30px;
-        min-width:30px;
-        max-width:50px;
-        max-height:50px;
+        min-height: 30px;
+        min-width: 30px;
+        max-width: 50px;
+        max-height: 50px;
     }
 </style>
 <table width="100%" height="100%" cellpadding="0" cellspacing="0">
     <tr>
-        <td onclick="location.href='?row=@ViewBag.row&column=@ViewBag.column&seat=0'"><img src="~/images/Seat.png" height="100%" width="100%"></td>
-        <td onclick="location.href='?row=@ViewBag.row&column=@ViewBag.column&seat=1'"><img src="~/images/Seat.png" height="100%" width="100%"></td>
+        <td onclick="@seatLink(0)"><img src="~/images/Seat.png" height="100%" width="100%"></td>
+        <td onclick="@seatLink(1)"><img src="~/images/Seat.png" height="100%" width="100%"></td>
     </tr>
     <tr>
-        <td onclick="location.href='?row=@ViewBag.row&column=@ViewBag.column&seat=0'"class="@orderStates[0].ToString() xxx">@getPlace(0)</td>
-        <td onclick="location.href='?row=@ViewBag.row&column=@ViewBag.column&seat=1'" class="@orderStates[1].ToString() xxx">@getPlace(1)</td>
+        <td onclick="@seatLink(0)" class="@orderStates[0].ToString() xxx">@getPlace(0)</td>
+        <td onclick="@seatLink(1)" class="@orderStates[1].ToString() xxx">@getPlace(1)</td>
     </tr>
     <tr>
         <td colspan="2">
-
-            @switch (Model.GeneralState)
-    {
-        @case Order.OrderState.InActive: <img src="~/images/TableInActive.png" height="100%" width="100%">
-break;
-        @case Order.OrderState.Ready:
-        <img src="~/images/TableActionNeeded.png" height="100%" width="100%">
-break;
-        @default:
-        <img src="~/images/Table.png" height="100%" width="100%">
-
-break;
-}
-
+           <img src="~/images/@tableImg()" height="100%" width="100%">  
         </td>
     </tr>
     <tr>
-        <td onclick="location.href='?row=@ViewBag.row&column=@ViewBag.column&seat=2'" class="@orderStates[2].ToString() xxx">@getPlace(2)</td>
-        <td onclick="location.href='?row=@ViewBag.row&column=@ViewBag.column&seat=3'" class="@orderStates[3].ToString() xxx">@getPlace(3)</td>
+        <td onclick="@seatLink(2)" class="@orderStates[2].ToString() xxx">@getPlace(2)</td>
+        <td onclick="@seatLink(3)" class="@orderStates[3].ToString() xxx">@getPlace(3)</td>
     </tr>
     <tr>
-        <td onclick="location.href='?row=@ViewBag.row&column=@ViewBag.column&seat=2'"><img src="~/images/Seat.png" id="rot180" height="100%" width="100%"></td>
-        <td onclick="location.href='?row=@ViewBag.row&column=@ViewBag.column&seat=3'"><img src="~/images/Seat.png" id="rot180" height="100%" width="100%"></td>
+        <td onclick="@seatLink(2)"><img src="~/images/Seat.png" id="rot180" height="100%" width="100%"></td>
+        <td onclick="@seatLink(3)"><img src="~/images/Seat.png" id="rot180" height="100%" width="100%"></td>
     </tr>
 </table>
 

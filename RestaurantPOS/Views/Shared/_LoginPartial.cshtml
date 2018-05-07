@@ -9,7 +9,7 @@
     <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <li>
-                <a>Hello @UserManager.GetUserName(User)!</a>
+                <a>Hello, @UserManager.GetUserName(User)!</a>
             </li>
             <li><a asp-area="" asp-controller="Account" asp-action="Logout">Log Out</a></li>
         </ul>

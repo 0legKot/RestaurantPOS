@@ -36,6 +36,8 @@ namespace RestaurantPOS.Controllers
         [AllowAnonymous]
         public IActionResult OrderHistory()
         {
+            foreach (Table t in restaurant.TablesGrid)
+                if (t != null) ViewData[t.Id.ToString()] = $"Row:{t.Row} Column: {t.Column}";
             return View(orderHistory);
         }
         //[HttpPost] needed
@@ -129,9 +131,14 @@ namespace RestaurantPOS.Controllers
         {
             OrderInfo orderInfo = orderHistory.GetOrderInfo(OrderInfoId);
             if (orderInfo == null) return Redirect("~/Home/OrderHistory");
+            bool orderClosed = orderInfo.Order.ClosedDate != new DateTime();
             Table curTable = null;
             foreach (Table t in restaurant.TablesGrid)
-                if (t != null && t.Id == orderInfo.TableId) curTable = t.Clone() as Table;
+                if (t != null && t.Id == orderInfo.TableId) {
+                    if (orderClosed)
+                    { curTable = t.Clone() as Table; }
+                    else curTable = t;
+                }
 
             if (curTable == null) return BadRequest();
 
@@ -139,12 +146,9 @@ namespace RestaurantPOS.Controllers
             ViewBag.column = curTable.Column;
             ViewBag.curSeat = orderInfo.TableSeatsNumbers.FirstOrDefault();
 
-
+            if (orderClosed)
             foreach (TableSeat seat in curTable.TableSeats)
                 seat.Order = orderInfo.Order;
-
-            //foreach (int seat in orderInfo.TableSeatsNumbers)
-            //    curTable.TableSeats[seat].Order = orderInfo.Order;
             return View("TableDetail", curTable);
         }
 
