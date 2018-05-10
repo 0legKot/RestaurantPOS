@@ -1,4 +1,4 @@
-﻿@model OrderHistory
+﻿@model List<OrderInfo>
 @{
     ViewData["Title"] = "OrderHistory";
 }
@@ -38,15 +38,16 @@
 </style>
 <h2>OrderHistory</h2>
 <div class="grid-container">
-    @foreach (OrderInfo info in Model.GetOrders())
+    @foreach (OrderInfo info in Model)
     {
     <div class="grid-item @info.Order.State.ToString()" onclick="location.href='View?OrderInfoId=@info.Id'">
 
         <p align="right" class="sm">Waiter: @info.Order.Waiter</p>
         <p align="right" class="sm">Price: @info.Order.TotalPrice.ToString("G")</p>
-        <p>Table place:<br /> @ViewData[info.TableId.ToString()]</p>
-        @foreach (int seat in info.TableSeatsNumbers)
-    {<p>Seat : @("ABCD"[seat])</p>}
+        @if (ViewData[info.TableId.ToString()]!=null) { 
+        <p>Table place:<br /> @ViewData[info.TableId.ToString()]</p>}
+        @foreach (SeatNumber seat in info.TableSeatsNumbers)
+    {<p>Seat : @("ABCD"[seat.Number])</p>}
         @*<p>Order Id:  @info.Order.Id</p>*@
         @*<p>Order state:@info.Order.State</p>*@
 

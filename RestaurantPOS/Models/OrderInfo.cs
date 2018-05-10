@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RestaurantPOS.Models
 {
     public class OrderInfo:ICloneable
     {
         private OrderInfo() { }
-        public OrderInfo(Order order, Guid table, List<int> tableSeats)
+        public OrderInfo(Order order, Guid table, List<SeatNumber> tableSeats)
         {
             Order = order;
             TableId = table;
@@ -14,8 +16,9 @@ namespace RestaurantPOS.Models
         }
         public Guid Id { get; private set; } = Guid.NewGuid();
         public Order Order { get; set; }
+    
         public Guid TableId { get; set; }
-        public List<int> TableSeatsNumbers { get; set; }
+        public List<SeatNumber> TableSeatsNumbers { get; set; }
 
         public object Clone()
         {

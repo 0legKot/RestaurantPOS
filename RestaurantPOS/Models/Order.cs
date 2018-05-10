@@ -21,7 +21,7 @@ namespace RestaurantPOS.Models
         public Guid Id { get; private set; }
         public IList<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
         public decimal Tips { get; set; }
-        public decimal Discount { get; set; } = 0;
+        public decimal Discount { get; set; }
         public OrderState State { get;  set; }
         IList<OrderItem> CloneOrderItems() {
             List<OrderItem> clone = new List<OrderItem>();
@@ -44,7 +44,7 @@ namespace RestaurantPOS.Models
 
         public decimal TotalPrice => OrderItems.Select(oi => oi.Price).Sum()+Tips-Discount;
         public DateTime OpenedDate { get; private set; }
-        public DateTime ClosedDate { get; private set; }
+        public DateTime ClosedDate { get;  set; }
          void Close() => ClosedDate = DateTime.Now;
 
         public object Clone()

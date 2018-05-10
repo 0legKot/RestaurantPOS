@@ -24,21 +24,14 @@ namespace RestaurantPOS
             services.AddDbContext<AppIdentityDbContext>(options =>
                 options.UseSqlServer(
                     Configuration["Data:RestaurantPOSIdentity:ConnectionString"]));
+            services.AddDbContext<AppDbContext>(options =>
+               options.UseSqlServer(
+                   Configuration["Data:RestaurantPOSOrderHistory:ConnectionString"]));
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>()
                 .AddDefaultTokenProviders();
-            //services.AddMemoryCache();
-            //services.AddSession();
-            ////services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
-            ////{
-            ////    options.LoginPath = new PathString("/index");
-            ////});
-            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            //   .AddCookie(options => //CookieAuthenticationOptions
-            //    {
-            //        options.LoginPath = new PathString("/Account/Login");
-            //    });
-            //services.AddAuthorization();
+            //services.AddScoped<AppDbContext>(provider => provider.GetService<AppDbContext>());
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
